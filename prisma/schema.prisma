@@ -5,23 +5,23 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id           String    @id @default(cuid())
-  email        String    @unique
+  id           String         @id @default(cuid())
+  email        String         @unique
   name         String
   passwordHash String
-  role         String    @default("customer") // customer | admin
+  role         String         @default("customer")
   avatarUrl    String?
   phone        String?
   address      String?
   city         String?
-  country     String    @default("Egypt")
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  country      String         @default("Egypt")
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
   orders       Order[]
   cart         CartItem[]
   wishlist     WishlistItem[]
@@ -29,103 +29,103 @@ model User {
 }
 
 model Product {
-  id          String    @id @default(cuid())
-  name        String
-  slug        String    @unique
-  description String
+  id             String         @id @default(cuid())
+  name           String
+  slug           String         @unique
+  description    String
   longDescription String?
-  price       Float
-  compareAt   Float?
-  images     String    // JSON array of image URLs
-  sizes       String    // JSON array of sizes
-  colors      String    // JSON array of colors
-  category    String    // category name
-  tags        String    // JSON array of tags
-  inventory   Int       @default(0)
-  rating      Float     @default(0)
-  reviewCount Int       @default(0)
-  featured    Boolean   @default(false)
-  active      Boolean   @default(true)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  reviews     Review[]
-  cartItems   CartItem[]
-  wishlistItems WishlistItem[]
-  orderItems  OrderItem[]
+  price          Float
+  compareAt      Float?
+  images         String
+  sizes          String
+  colors         String
+  category       String
+  tags           String
+  inventory      Int            @default(0)
+  rating         Float          @default(0)
+  reviewCount    Int            @default(0)
+  featured       Boolean        @default(false)
+  active         Boolean        @default(true)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  reviews        Review[]
+  cartItems      CartItem[]
+  wishlistItems  WishlistItem[]
+  orderItems     OrderItem[]
 }
 
 model Order {
-  id           String    @id @default(cuid())
-  orderNumber  String    @unique
-  userId       String
-  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  items        OrderItem[]
-  subtotal     Float
-  shipping     Float
-  tax          Float
-  total        Float
-  status       String    @default("pending") // pending | paid | shipped | delivered | cancelled | refunded
-  paymentMethod String?
-  paymentRef   String?
-  shippingName String
-  shippingEmail String
-  shippingPhone String
+  id              String      @id @default(cuid())
+  orderNumber     String      @unique
+  userId          String
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items           OrderItem[]
+  subtotal        Float
+  shipping        Float
+  tax             Float
+  total           Float
+  status          String      @default("pending")
+  paymentMethod   String?
+  paymentRef      String?
+  shippingName    String
+  shippingEmail   String
+  shippingPhone   String
   shippingAddress String
-  shippingCity String
-  shippingCountry String @default("Egypt")
-  shippingPostal String?
-  notes        String?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  shippingCity    String
+  shippingCountry String      @default("Egypt")
+  shippingPostal  String?
+  notes           String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
 }
 
 model OrderItem {
-  id          String    @id @default(cuid())
-  orderId     String
-  order       Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  productId   String
-  product     Product   @relation(fields: [productId], references: [id])
-  name        String
-  price       Float
-  quantity    Int
-  size        String?
-  color       String?
-  image       String?
+  id        String  @id @default(cuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  name      String
+  price     Float
+  quantity  Int
+  size      String?
+  color     String?
+  image     String?
 }
 
 model CartItem {
-  id          String    @id @default(cuid())
-  userId      String
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  productId   String
-  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
-  quantity    Int       @default(1)
-  size        String?
-  color       String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity  Int      @default(1)
+  size      String?
+  color     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model WishlistItem {
-  id          String    @id @default(cuid())
-  userId      String
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  productId   String
-  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
-  createdAt   DateTime  @default(now())
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
 }
 
 model Review {
-  id          String    @id @default(cuid())
-  userId      String
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  productId   String
-  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
-  rating      Int
-  title       String
-  body        String
-  verified    Boolean   @default(false)
-  createdAt   DateTime  @default(now())
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  rating    Int
+  title     String
+  body      String
+  verified  Boolean  @default(false)
+  createdAt DateTime @default(now())
 }
 
 model Newsletter {
