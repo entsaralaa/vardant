@@ -15,7 +15,7 @@ import {
 import {
   useRouter,
   type RouteKey,
-} from "@/components/providers";
+} from "@/components/providers/router";
 
 import { useCartStore } from "@/store/cart";
 import { useWishlistStore } from "@/store/wishlist";
@@ -552,4 +552,4 @@ export function Navbar() {
       )}
     </>
   );
-} 
+}
